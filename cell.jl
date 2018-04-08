@@ -16,7 +16,7 @@ module Cell
         natoms::Int
         atoms::Array{Atom}
         lattice::Array{Float64}(2,2)
-        dimensions::Array{Int64}(2,2)
+        dimensions::Array{Int64}(2)
         pot::Potential
         energy::Float64
     end
@@ -27,10 +27,11 @@ module Cell
     end
 
     # constructor with lattice and dimensions
-    function Cell(lat, dim::Array{Int64}(2,2))
+    function Cell(lat, dim::Array{Int64}(2), pot::Potential)
         c = Cell()
         setLattice(c, lat)
         setDimensions(c, dim)
+        setPotential(pot)
         createAtoms(c)
     end
 

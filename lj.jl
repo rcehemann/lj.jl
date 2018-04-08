@@ -3,9 +3,9 @@
 # settings are defined in the beginning section, simulation is run in the end
 # ############################################################################
 
-import("sim.jl")
-import("cell.jl")
-import("pot.jl")
+include("sim.jl")
+include("cell.jl")
+include("pot.jl")
 
 #-----------------------------------INPUTS-----------------------------------#
 # pot parameters

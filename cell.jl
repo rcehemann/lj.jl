@@ -10,7 +10,7 @@
 
 module Cell
 
-    import("atom.jl")
+    include("atom.jl")
 
     type Cell
         natoms::Int

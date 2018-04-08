@@ -7,7 +7,7 @@
 
 module Pot
 
-    import("cell.jl")
+    include("cell.jl")
 
     type Potential
         params::Array{Float64}

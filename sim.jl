@@ -8,7 +8,7 @@
 
 module Simulation
 
-    import("cell.jl")
+    include("cell.jl")
 
     type Simulation
         timestep::Float

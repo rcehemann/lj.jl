@@ -62,6 +62,12 @@ module Cell
         end
     end
 
+    # default mass and type setter
+    function setMassesAndTypes(cell)
+        [atom.t = 1 for atom in cell.atoms]
+        [atom.m = 1 for atom in cell.atoms]
+    end
+
     # initialize atoms on the lattice of the cell
     function createAtoms(cell)
         if length(cell.dimensions) == 0
@@ -74,6 +80,7 @@ module Cell
                     cell.lattice[2] * j
             ]) for i=1:cell.dimensions[1] for j=1:cell.dimensions[2]]
         end
+        setMassesAndTypes(cell)
     end
 
     # update atom positions

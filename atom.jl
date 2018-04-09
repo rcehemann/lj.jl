@@ -11,6 +11,6 @@ type Atom
     r::Array{Float64}(2)
     v::Array{Float64}(2)
     f::Array{Float64}(2)
-    m::Float64 = 1 # mass
-    t::Int64 = 1   # type
+    m::Float64 # mass
+    t::Int64  # type
 end

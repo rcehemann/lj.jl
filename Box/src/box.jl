@@ -10,7 +10,7 @@
 
 module Box
 
-    include("atom.jl")
+    using Atom
 
     type Box
         natoms::Int

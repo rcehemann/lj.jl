@@ -8,7 +8,7 @@
 
 module Simulation
 
-    include("box.jl")
+    using Box
 
     type Simulation
         timestep::Float

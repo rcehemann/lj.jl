@@ -3,9 +3,12 @@
 # settings are defined in the beginning section, simulation is run in the end
 # ############################################################################
 
-using Sim
+include("./src/Box.jl")
+include("./src/Pot.jl")
+include("./src/Sim.jl")
 using Box
 using Pot
+using Sim
 
 #-----------------------------------INPUTS-----------------------------------#
 # pot parameters

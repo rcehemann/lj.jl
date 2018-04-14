@@ -7,7 +7,7 @@
 
 module Pot
 
-    include("cell.jl")
+    include("atom.jl")
 
     type Potential
         params::Array{Float64}

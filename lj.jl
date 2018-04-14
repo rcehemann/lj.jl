@@ -4,7 +4,7 @@
 # ############################################################################
 
 include("sim.jl")
-include("cell.jl")
+include("box.jl")
 include("pot.jl")
 
 #-----------------------------------INPUTS-----------------------------------#
@@ -18,12 +18,12 @@ pot = Potential(ljSigma, ljEpsilon, ljCut)
 lat = "sq"
 xDim = 10
 yDim = 10
-cell = Cell(lat, [xDim, yDim], pot)
+cell = Box(lat, [xDim, yDim], pot)
 
 # sim parameters
 dt = 0.001
 nsteps = 1000
-sim = Simulation(cell, dt, nsteps)
+sim = Simulation(box, dt, nsteps)
 #----------------------------------------------------------------------------#
 
 

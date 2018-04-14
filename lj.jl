@@ -6,9 +6,6 @@
 include("./src/Box.jl")
 include("./src/Pot.jl")
 include("./src/Sim.jl")
-using Box
-using Pot
-using Sim
 
 #-----------------------------------INPUTS-----------------------------------#
 # pot parameters

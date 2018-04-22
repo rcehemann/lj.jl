@@ -9,7 +9,7 @@ include("./src/box.jl")
 
 #-----------------------------------INPUTS-----------------------------------#
 # pot parameters
-ljSigma = 1.
+ljSigma = 1./1.122
 ljEpsilon = 1.
 ljCut = 4.
 pot = Pot(ljSigma, ljEpsilon, ljCut)
@@ -21,7 +21,7 @@ yDim = 10
 box = Box(lat, [xDim, yDim], pot)
 
 # sim parameters
-dt = 0.001
+dt = 1e-6
 nsteps = 1000
 sim = Sim(box, dt, nsteps)
 #----------------------------------------------------------------------------#

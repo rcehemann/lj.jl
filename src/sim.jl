@@ -36,14 +36,14 @@ function vvStep(sim::Sim)
         updateVelocity(sim.box, v_t)
 
         # compute and update forces
-        updateForce(sim.box, totalForce(sim.box.pot, sim.box.atoms))
-        f_t = map(x -> x.f, sim.box.atoms)
+        f_t = updateForce(sim.box, totalForce(sim.box.pot, sim.box.atoms))
 
         # compute and update second LeapFrog step in velocity
         v_t  .+= f_t ./ (2 .* m)
         updateVelocity(sim.box, v_t)
 
-        # update time
+        # update time and energy
+        updateEnergy(sim.box)
         sim.time += sim.timestep
 end
 
@@ -51,7 +51,7 @@ end
 function runSim(sim::Sim)
         while sim.time <= sim.tmax
             vvStep(sim)
-            @printf "time: %.3f \t energy: %.6f\n" sim.time sim.box.energy
+            @printf "time: %.3f \t energy: %.12f\n" sim.time sim.box.energy
         end
         println("All done!")
 end

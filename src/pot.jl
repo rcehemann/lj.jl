@@ -47,12 +47,12 @@ function pairwiseForce(p::Pot, ai::AtomLJ, aj::AtomLJ)
     rij = aj.r - ai.r
     dir = rij/norm(rij)
     rij = norm(rij)
-       
+
     if rij > p.cutoff || rij < 1e-8
         return [0.0, 0.0]
     end
 
-    fij = 6 * (p.params[1]/rij)^7 - 12 * (p.params[1]/rij)^13
+    fij = (6/p.params[1]) * (p.params[1]/rij)^7 - (12/p.params[1]) * (p.params[1]/rij)^13
     fij *= -4 * p.params[2]
     return fij .* dir
 end
@@ -60,7 +60,8 @@ end
 # compute total energy of a set of atoms
 function totalEnergy(p::Pot, atoms::Array{AtomLJ})
     0.5 * sum(map(
-        (x, y) -> pairwiseEnergy(p, x, y), atoms, atoms
+        a -> pairwiseEnergy(p, a[1], a[2]),
+        [(ai, aj) for ai in atoms for aj in atoms]
     ))
 end
 

@@ -70,7 +70,7 @@ end
 # default mass and type setter
 function setMassesAndTypes(box)
     [atom.t = 1  for atom in box.atoms]
-    [atom.m = 1. for atom in box.atoms]
+    [atom.m = 10. for atom in box.atoms]
 end
 
 # initialize atoms on the lattice of the box

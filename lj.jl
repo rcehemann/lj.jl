@@ -15,17 +15,20 @@ ljCut = 4.
 pot = Pot(ljSigma, ljEpsilon, ljCut)
 
 # cell parameters
-lat = "hex"
+lat = "sq"
 xDim = 10
 yDim = 10
 box = Box(lat, [xDim, yDim], pot)
 
 # sim parameters
-dt = 1e-6
-nsteps = 1000
+dt = 1e-4
+nsteps = 100
 sim = Sim(box, dt, nsteps)
 #----------------------------------------------------------------------------#
 
 
 #--------------------------------------RUN-----------------------------------#
 runSim(sim)
+pos = map(x->x.r, sim.box.atoms)
+xpos = [pos[i][1] for i=1:length(pos)]
+ypos = [pos[j][2] for j=1:length(pos)]

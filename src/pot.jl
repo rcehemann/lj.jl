@@ -28,7 +28,7 @@ function Pot(sigma, epsilon, cutoff)
 end
 
 # return energy of pair for LJ
-function pairwiseEnergy(p::Pot, ai::Atom, aj::Atom)
+function pairwiseEnergy(p::Pot, ai::AtomLJ, aj::AtomLJ)
     rij = aj.r-ai.r
     rij = norm(rij)
     if rij > p.cutoff
@@ -42,7 +42,7 @@ function pairwiseEnergy(p::Pot, ai::Atom, aj::Atom)
 end
 
 # return force on atom i
-function pairwiseForce(p::Pot, ai::Atom, aj::Atom)
+function pairwiseForce(p::Pot, ai::AtomLJ, aj::AtomLJ)
     rij = aj.r - ai.r
     dir = rij/norm(rij)
     rij = norm(rij)
@@ -55,14 +55,14 @@ function pairwiseForce(p::Pot, ai::Atom, aj::Atom)
 end
 
 # compute total energy of a set of atoms
-function totalEnergy(p::Pot, atoms::Array{Atom})
+function totalEnergy(p::Pot, atoms::Array{AtomLJ})
     0.5 * sum(map(
         (x, y) -> pairwiseEnergy(p, x, y), atoms, atoms
     ))
 end
 
 # compute the net force on each atom
-function totalForce(p::Pot, atoms::Array{Atom})
+function totalForce(p::Pot, atoms::Array{AtomLJ})
     0.5 .* [sum(map(
         (x, y) -> pairwiseForce(p, x, y), atom, atoms
     )) for atom in atoms]

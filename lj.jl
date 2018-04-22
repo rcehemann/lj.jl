@@ -3,9 +3,9 @@
 # settings are defined in the beginning section, simulation is run in the end
 # ############################################################################
 
-include("./src/Box.jl")
-include("./src/Pot.jl")
-include("./src/Sim.jl")
+include("./src/sim.jl")
+include("./src/pot.jl")
+include("./src/box.jl")
 
 #-----------------------------------INPUTS-----------------------------------#
 # pot parameters
@@ -18,14 +18,14 @@ pot = Pot(ljSigma, ljEpsilon, ljCut)
 lat = "sq"
 xDim = 10
 yDim = 10
-box = Box.Box(lat, [xDim, yDim], pot)
+box = Box(lat, [xDim, yDim], pot)
 
 # sim parameters
 dt = 0.001
 nsteps = 1000
-sim = Sim.Sim(box, dt, nsteps)
+sim = Sim(box, dt, nsteps)
 #----------------------------------------------------------------------------#
 
 
 #--------------------------------------RUN-----------------------------------#
-run(sim)
+runSim(sim)

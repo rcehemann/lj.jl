@@ -4,37 +4,37 @@
 # atoms  : array of Atom types
 # lattce : 2D lattice on which to create atoms
 # dimensions : boundaries of box in lattice units
-# pot : Potential type for computing forces and energies
+# pot : Pot type for computing forces and energies
 # energy : total energy of the box
 # ############################################################################
 
 include("./pot.jl")
 
 type Box
-    natoms::Int
-    atoms::Array{Atom}
+    natoms::Int64
+    atoms::Array{AtomLJ}
     lattice::Array{Float64}
     dimensions::Array{Int64}
-    pot::Potential
+    pot::Pot
     energy::Float64
 end
 
 # empty constructor
 function Box()
-    Box(0, [], [], [], Potential())
+    Box(0, [], [], [], Pot())
 end
 
 # constructor with lattice and dimensions
-function Box(lat, dim::Array{Int64}, pot::Potential)
+function Box(lat, dim::Array{Int64}, pot::Pot)
     c = Box()
     setLattice(c, lat)
     setDimensions(c, dim)
-    setPotential(pot)
+    setPot(pot)
     createAtoms(c)
 end
 
-# setter for potentials
-function setPotential(box, pot::Potential)
+# setter for Pots
+function setPotential(box, pot::Pot)
     box.pot = pot
 end
 

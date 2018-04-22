@@ -9,9 +9,9 @@
 include("./box.jl")
 
 type Simulation
-        timestep::Float
-        time::Float
-        tmax::Float
+        timestep::Float64
+        time::Float64
+        tmax::Float64
         box::Box
 end
 
@@ -45,7 +45,7 @@ function vvStep(sim::Simulation)
 end
 
 # run the simulation, performing VV steps and printing total energies
-function run(sim::Simulation)
+function runSim(sim::Simulation)
         while sim.time <= sim.tmax
             vvStep(sim)
             sim.time += sim.timestep

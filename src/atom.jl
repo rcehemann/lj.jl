@@ -7,7 +7,7 @@
 # t : atom species (presently unused)
 # ############################################################################
 
-type Atom
+type AtomLJ
     r::Array{Float64}
     v::Array{Float64}
     f::Array{Float64}

@@ -15,7 +15,7 @@ end
 
 # default parameter values
 function Pot()
-    Pot(1, 1, 4) # defaults
+    Pot(1., 1., 4.) # defaults
 end
 
 # constructor with custom params -- compute ecut
@@ -31,13 +31,14 @@ end
 function pairwiseEnergy(p::Pot, ai::AtomLJ, aj::AtomLJ)
     rij = aj.r-ai.r
     rij = norm(rij)
-    if rij > p.cutoff
+
+    if rij > p.cutoff || rij < 1e-8 # no self-energy
         return 0.0
     end
 
-    lj = -1*(params[1]/rij)^6
+    lj = -1*(p.params[1]/rij)^6
     lj -= lj^2
-    lj *= 4*params[2]
+    lj *= 4*p.params[2]
     return lj - p.ecut # energy is zero at cutoff
 end
 
@@ -46,11 +47,13 @@ function pairwiseForce(p::Pot, ai::AtomLJ, aj::AtomLJ)
     rij = aj.r - ai.r
     dir = rij/norm(rij)
     rij = norm(rij)
-    if rij > p.cutoff
+       
+    if rij > p.cutoff || rij < 1e-8
         return [0.0, 0.0]
     end
-    fij = 6 * (params[2]/rij)^7 - 12 * (params[1]/rij)^13
-    fij *= -4 * epsilon
+
+    fij = 6 * (p.params[1]/rij)^7 - 12 * (p.params[1]/rij)^13
+    fij *= -4 * p.params[2]
     return fij .* dir
 end
 
@@ -63,7 +66,7 @@ end
 
 # compute the net force on each atom
 function totalForce(p::Pot, atoms::Array{AtomLJ})
-    0.5 .* [sum(map(
-        (x, y) -> pairwiseForce(p, x, y), atom, atoms
-    )) for atom in atoms]
+    [0.5 .* sum(map(
+        aj -> pairwiseForce(p, ai, aj), atoms))
+    for ai in atoms]
 end

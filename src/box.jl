@@ -9,11 +9,13 @@
 # ############################################################################
 
 include("./pot.jl")
+include("./atom.jl")
 
 type Box
     natoms::Int64
     atoms::Array{AtomLJ}
-    lattice::Array{Float64}
+    lattice::Array{Float64,2}
+    bounds::Array{Float64,2}
     dimensions::Array{Int64}
     pot::Pot
     energy::Float64
@@ -21,16 +23,19 @@ end
 
 # empty constructor
 function Box()
-    Box(0, [], [], [], Pot())
+    Box(1, [AtomLJ()], [1. 0.; 0. 1.], [1. 0.; 0. 1.], [1, 1], Pot(), 0.)
 end
 
-# constructor with lattice and dimensions
+# constructor with lattice and multiplicative dimensions
 function Box(lat, dim::Array{Int64}, pot::Pot)
-    c = Box()
-    setLattice(c, lat)
-    setDimensions(c, dim)
-    setPot(pot)
-    createAtoms(c)
+    box = Box()
+    box.dimensions = dim
+    setLattice(box, lat)
+    setBounds(box, dim)
+    setPotential(box, pot)
+    createAtoms(box)
+
+    return box # return box
 end
 
 # setter for Pots
@@ -46,54 +51,57 @@ function setLattice(box, lattice)
         elseif lattice == "hex"
             box.lattice = [1.0 0.0; 0.5 sqrt(3)/2]
         end
+    elseif typeof(lattice) == Array{Float64, 2}
+        box.lattice = lattice
     end
 end
 
 # setter for dimensions in lattice units
-function setDimensions(box, dimensions)
+function setBounds(box, dimensions)
     # default to square if no lattice exists
     if length(box.lattice) == 0
         setLattice(box, "sq")
-        return setDimensions(box, dimensions)
-    elseif typeof(dimensions) == Array
-        box.dimensions = [dimensions[i]*box.lattice[i] for i=1:2]
+        return setBounds(box, dimensions)
+    else
+        box.bounds = dimensions .* box.lattice
     end
 end
 
 # default mass and type setter
 function setMassesAndTypes(box)
-    [atom.t = 1 for atom in box.atoms]
-    [atom.m = 1 for atom in box.atoms]
+    [atom.t = 1  for atom in box.atoms]
+    [atom.m = 1. for atom in box.atoms]
 end
 
 # initialize atoms on the lattice of the box
 function createAtoms(box)
     if length(box.dimensions) == 0
-        set_dimensions(box, [2,2])
-        return create_atoms(box)
+        setBounds(box, [2,2])
+        create_atoms(box)
     else
         box.natoms = prod(box.dimensions)
-        [box.atoms[i+j].r = ([
-                box.lattice[1] * i
-                box.lattice[2] * j
-        ]) for i=1:box.dimensions[1] for j=1:box.dimensions[2]]
+        box.atoms  = [AtomLJ() for i=1:box.natoms]
+        updatePosition(box, [
+                box.lattice[1,:] * i + box.lattice[2,:] * j
+         for i=1:box.dimensions[1] for j=1:box.dimensions[2]])
     end
     setMassesAndTypes(box)
+    box.energy = totalEnergy(box.pot, box.atoms)
 end
 
 # update atom positions
-function updatePosition(box, r::Array{Float64})
-    [a[i].r = r[i] for i=1:size(box.atoms)]
+function updatePosition(box, r::Array{Array{Float64,1},1})
+    [box.atoms[i].r = r[i] for i=1:box.natoms]
 end
 
 # update atom velocities
-function updateVelocity(box, v::Array{Float64})
-    [a[i].v = v[i] for i=1:size(box.atoms)]
+function updateVelocity(box, v::Array{Array{Float64,1},1})
+    [box.atoms[i].v = v[i] for i=1:box.natoms]
 end
 
 # update atom forces
-function updateForce(box, f::Array{Float64})
-    [a[i].f = f[i] for i=1:size(box.atoms)]
+function updateForce(box, f::Array{Array{Float64,1},1})
+    [box.atoms[i].f = f[i] for i=1:box.natoms]
 end
 
 # compute and store the total energy

@@ -9,13 +9,13 @@ include("./src/box.jl")
 
 #-----------------------------------INPUTS-----------------------------------#
 # pot parameters
-ljSigma = 1
-ljEpsilon = 1
-ljCut = 4
+ljSigma = 1.
+ljEpsilon = 1.
+ljCut = 4.
 pot = Pot(ljSigma, ljEpsilon, ljCut)
 
 # cell parameters
-lat = "sq"
+lat = "hex"
 xDim = 10
 yDim = 10
 box = Box(lat, [xDim, yDim], pot)

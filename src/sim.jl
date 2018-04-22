@@ -8,7 +8,7 @@
 
 include("./box.jl")
 
-type Simulation
+type Sim
         timestep::Float64
         time::Float64
         tmax::Float64
@@ -16,12 +16,12 @@ type Simulation
 end
 
 # constructor taking box, timestep and number of steps
-function Simulation(c::Box, dt, nsteps)
-        Simulation(dt, 0.0, dt * nsteps, c)
+function Sim(box::Box, dt, nsteps)
+        Sim(dt, 0.0, dt * nsteps, box)
 end
 
 # perform a Velocity Verlet step
-function vvStep(sim::Simulation)
+function vvStep(sim::Sim)
         f_t = map(x -> x.f, sim.box.atoms)
         v_t = map(x -> x.v, sim.box.atoms)
         r_t = map(x -> x.r, sim.box.atoms)
@@ -42,14 +42,16 @@ function vvStep(sim::Simulation)
         # compute and update second LeapFrog step in velocity
         v_t  .+= f_t ./ (2 .* m)
         updateVelocity(sim.box, v_t)
+
+        # update time
+        sim.time += sim.timestep
 end
 
 # run the simulation, performing VV steps and printing total energies
-function runSim(sim::Simulation)
+function runSim(sim::Sim)
         while sim.time <= sim.tmax
             vvStep(sim)
-            sim.time += sim.timestep
-            @printf "time: %.6f energy: %.6f" sim.time sim.box.energy
+            @printf "time: %.3f \t energy: %.6f\n" sim.time sim.box.energy
         end
         println("All done!")
 end

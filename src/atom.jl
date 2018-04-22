@@ -14,3 +14,13 @@ type AtomLJ
     m::Float64 # mass
     t::Int64  # type
 end
+
+# default constructor
+function AtomLJ()
+    AtomLJ(
+            [0., 0.],
+            [0., 0.],
+            [0., 0.],
+            12., 1
+    )
+end

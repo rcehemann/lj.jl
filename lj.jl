@@ -32,3 +32,4 @@ runSim(sim)
 pos = map(x->x.r, sim.box.atoms)
 xpos = [pos[i][1] for i=1:length(pos)]
 ypos = [pos[j][2] for j=1:length(pos)]
+plot(x=xpos, y=ypos)
